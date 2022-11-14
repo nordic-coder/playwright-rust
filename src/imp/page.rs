@@ -542,7 +542,6 @@ impl RemoteObject for Page {
         method: Str<Method>,
         params: Map<String, Value>
     ) -> Result<(), Error> {
-        dbg!(&method);
         match method.as_str() {
             "close" => self.on_close(ctx)?,
             "frameattached" => {
