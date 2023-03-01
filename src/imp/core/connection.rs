@@ -93,7 +93,7 @@ impl Connection {
             .stdout(Stdio::piped())
             .stderr(Stdio::inherit());
         #[cfg(target_os = "windows")]
-        child.creation_flags(0x00000008);    
+        child.creation_flags(0x08000000);    
 
         let mut child = child.spawn()?;
 

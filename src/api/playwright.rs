@@ -20,7 +20,7 @@ fn run(driver: &Driver, args: &'static [&'static str]) -> io::Result<()> {
     let mut command = Command::new(driver.executable());
     let child = command.args(args);
     #[cfg(target_os = "windows")]
-    child.creation_flags(0x00000008);    
+    child.creation_flags(0x08000000);    
     let status = child.status()?;
 
     if !status.success() {

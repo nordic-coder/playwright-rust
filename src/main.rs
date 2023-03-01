@@ -26,6 +26,6 @@ fn run(args: env::ArgsOs, envs: env::VarsOs) -> io::Result<process::ExitStatus> 
         .envs(envs);
         
     #[cfg(target_os = "windows")]
-    child.creation_flags(0x00000008);    
+    child.creation_flags(0x08000000);    
     child.status()
 }
