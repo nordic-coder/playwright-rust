@@ -7,6 +7,8 @@ use std::{
         TryLockError
     }
 };
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
 
 #[derive(Debug)]
 pub(crate) struct Context {
@@ -84,12 +86,17 @@ impl Drop for Connection {
 
 impl Connection {
     fn try_new(exec: &Path) -> io::Result<Connection> {
-        let mut child = Command::new(exec)
+        let mut command = Command::new(exec);
+        let mut child = command
             .args(&["run-driver"])
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
-            .stderr(Stdio::inherit())
-            .spawn()?;
+            .stderr(Stdio::inherit());
+        #[cfg(target_os = "windows")]
+        child.creation_flags(0x00000008);    
+
+        let mut child = child.spawn()?;
+
         // TODO: env "NODE_OPTIONS"
         let stdin = child.stdin.take().unwrap();
         let stdout = child.stdout.take().unwrap();
