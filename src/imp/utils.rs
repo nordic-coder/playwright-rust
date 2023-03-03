@@ -121,7 +121,7 @@ pub struct LocalStorageEntry {
 pub enum DocumentLoadState {
     DomContentLoaded,
     Load,
-    NetworkIdle
+    NetworkIdle,
 }
 
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone, Copy)]
@@ -226,16 +226,19 @@ pub struct PdfMargins<'a, 'b, 'c, 'd> {
 }
 
 #[derive(Debug, Serialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub struct File {
     pub name: String,
     pub mime: String,
-    pub buffer: String
+    pub buffer: String,
+    pub mime_type: String,
 }
 
 impl File {
     pub fn new(name: String, mime: String, body: &[u8]) -> Self {
         let buffer = base64::encode(body);
-        Self { name, mime, buffer }
+        let mime_type = mime.clone();
+        Self { name, mime, buffer, mime_type }
     }
 }
 /// Browser distribution channel.

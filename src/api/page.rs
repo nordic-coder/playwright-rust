@@ -1,3 +1,4 @@
+use std::fmt::{Debug, Formatter};
 pub use crate::{
     api::{
         frame::{
@@ -10,6 +11,7 @@ pub use crate::{
     },
     imp::page::{EventType, Media}
 };
+use crate::protocol::generated::LifecycleEvent;
 use crate::{
     api::{
         input_device::*, Accessibility, BrowserContext, ConsoleMessage, ElementHandle, FileChooser,
@@ -429,6 +431,34 @@ pub enum Event {
     Video(Video)
 }
 
+impl Debug for Event {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let current_event = match self {
+            Event::Close => "Close",
+            Event::Crash => "Crash",
+            Event::Console(_) => "Console",
+            Event::Dialog => "Dialog",
+            Event::DomContentLoaded => "DomContentLoaded",
+            Event::Download(_) => "Download(_)",
+            // Event::FileChooser(_) => "FileChooser(_)",
+            Event::FrameAttached(_) => "FrameAttached(_)",
+            Event::FrameDetached(_) => "FrameDetached(_)",
+            Event::FrameNavigated(_) => "FrameNavigated(_)",
+            Event::Load => "Load",
+            Event::PageError => "PageError",
+            Event::Popup(_) => "Popup(_)",
+            Event::Request(_) => "Request(_)",
+            Event::RequestFailed(_) => "RequestFailed(_)",
+            Event::RequestFinished(_) => "RequestFinished(_)",
+            Event::Response(_) => "Response(_)",
+            Event::WebSocket(_) => "WebSocket(_)",
+            Event::Worker(_) => "Worker(_)",
+            Event::Video(_) => "Video(_)",
+        };
+        write!(f, "{}", current_event)
+    }
+}
+
 impl From<Evt> for Event {
     fn from(e: Evt) -> Event {
         match e {
@@ -758,7 +788,7 @@ macro_rules! navigation {
                 /// - `'domcontentloaded'` - consider operation to be finished when the `DOMContentLoaded` event is fired.
                 /// - `'load'` - consider operation to be finished when the `load` event is fired.
                 /// - `'networkidle'` - consider operation to be finished when there are no network connections for at least `500` ms.
-                wait_until: Option<DocumentLoadState>
+                wait_until: Option<LifecycleEvent>
             }
         }
     };
